@@ -3,78 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DerX Space - Главная</title>
+    <title>DerX Space - Форум</title>
     <style>
-        /* Современный черно-белый стиль */
-        body {
+        /* Стили для полноэкранного отображения */
+        html, body {
             margin: 0;
             padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-            color: #212529;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        
-        header {
-            background-color: #212529;
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        
-        .logo {
-            font-size: 2rem;
-            font-weight: bold;
-            margin: 0;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            flex: 1;
-        }
-        
-        nav {
-            display: flex;
-            justify-content: center;
-            margin-top: 15px;
-        }
-        
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            padding: 5px 10px;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-        
-        nav a:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .active {
-            border-bottom: 2px solid white;
-        }
-        
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
         }
         
         .iframe-container {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            margin-top: 20px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            height: 800px; /* Высота может быть изменена */
+            height: 100%;
+            z-index: 1;
         }
         
         iframe {
@@ -84,131 +31,59 @@
         }
         
         .loading {
-            text-align: center;
-            padding: 100px 0;
-            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
         }
         
-        .iframe-container.loading-active iframe {
+        .iframe-container.loaded .loading {
             display: none;
-        }
-        
-        .iframe-container.loading-active .loading {
-            display: block;
         }
         
         .spinner {
             border: 4px solid rgba(0, 0, 0, 0.1);
             border-left-color: #212529;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+            margin-bottom: 20px;
         }
         
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        footer {
-            background-color: #212529;
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-            margin-top: 40px;
-        }
-        
-        .footer-links a {
-            color: #adb5bd;
-            margin: 0 10px;
-            text-decoration: none;
-        }
-        
-        .footer-links a:hover {
-            color: white;
-        }
-        
-        /* Адаптивность для мобильных устройств */
-        @media (max-width: 768px) {
-            nav {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            nav a {
-                margin: 5px 0;
-            }
-            
-            .iframe-container {
-                height: 600px;
-            }
-        }
     </style>
 </head>
 <body>
-    <header>
-        <h1 class="logo">DerX Space</h1>
-        <nav>
-            <a href="#" class="active">Главная</a>
-            <a href="https://derx.space/forum" target="_blank">Форум</a>
-            <a href="https://github.com/derxywat" target="_blank">GitHub</a>
-        </nav>
-    </header>
-    
-    <div class="container">
-        <div class="main-content">
-            <h2>Добро пожаловать на DerX Space</h2>
-            <p>Интерактивный форум встроен ниже:</p>
-            
-            <div class="iframe-container loading-active" id="forumFrame">
-                <iframe src="https://forum.derx.space" id="forum" onload="hideLoading()"></iframe>
-                <div class="loading">
-                    <div class="spinner"></div>
-                    <p>Загрузка форума...</p>
-                    <p><small>Если загрузка занимает длительное время, вы можете <a href="https://forum.derx.space" target="_blank">открыть форум в новом окне</a>.</small></p>
-                </div>
-            </div>
+    <div class="iframe-container" id="forumFrame">
+        <iframe src="https://forum.derx.space" id="forum" onload="hideLoading()"></iframe>
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>Загрузка форума...</p>
+            <p><small>Если загрузка занимает слишком много времени, <a href="https://forum.derx.space" target="_blank">откройте форум напрямую</a>.</small></p>
         </div>
     </div>
-    
-    <footer>
-        <p>&copy; 2025 DerX Space. Все права защищены.</p>
-        <div class="footer-links">
-            <a href="https://github.com/derxywat" target="_blank">GitHub</a>
-            <a href="https://t.me/derxywat" target="_blank">Telegram</a>
-        </div>
-    </footer>
     
     <script>
         // Функция для скрытия индикатора загрузки после загрузки iframe
         function hideLoading() {
-            document.getElementById('forumFrame').classList.remove('loading-active');
+            document.getElementById('forumFrame').classList.add('loaded');
         }
         
         // Обработка ошибки загрузки iframe
         document.getElementById('forum').onerror = function() {
             document.querySelector('.loading p').innerText = 'Не удалось загрузить форум. Возможно, сервер временно недоступен.';
         };
-
-        // Проверка доступности форума
-        function checkForumAvailability() {
-            fetch('https://forum.derx.space', { 
-                mode: 'no-cors',
-                method: 'HEAD'
-            })
-            .then(() => {
-                console.log('Форум доступен');
-            })
-            .catch(error => {
-                console.error('Форум недоступен:', error);
-                document.querySelector('.loading p').innerText = 'Не удалось загрузить форум. Возможно, сервер временно недоступен.';
-            });
-        }
-        
-        // Проверяем доступность форума при загрузке страницы
-        window.addEventListener('load', checkForumAvailability);
     </script>
 </body>
 </html>
