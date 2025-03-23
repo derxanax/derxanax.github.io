@@ -3,362 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DerxHost - Консольный хостинг ботов</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>DerX Space - Главная</title>
     <style>
-        * {
+        /* Современный черно-белый стиль */
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
-
-        :root {
-            --primary: #306998;
-            --secondary: #FFD43B;
-            --accent: #4B8BBE;
-            --bg-dark: #1B1B1B;
-            --text: #E8E8E8;
-        }
-
-        body {
-            min-height: 100vh;
-            background: var(--bg-dark);
-            color: var(--text);
-            overflow-x: hidden;
-        }
-
-        .matrix-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            opacity: 0.1;
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .hero {
-            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            min-height: 100vh;
+        }
+        
+        header {
+            background-color: #212529;
+            color: white;
+            padding: 20px 0;
             text-align: center;
-            position: relative;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-
-        .terminal-window {
-            background: #282c34;
-            border-radius: 10px;
-            padding: 2rem;
-            margin: 2rem 0;
-            width: 100%;
-            max-width: 800px;
-            position: relative;
-            overflow: hidden;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .terminal-header {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: #1e2227;
-            padding: 0.5rem 1rem;
-            display: flex;
-            align-items: center;
-            border-radius: 10px 10px 0 0;
-        }
-
-        .terminal-dots {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .terminal-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #606060;
-        }
-
-        .terminal-dot:nth-child(1) { background: #ff5f56; }
-        .terminal-dot:nth-child(2) { background: #ffbd2e; }
-        .terminal-dot:nth-child(3) { background: #27c93f; }
-
-        .terminal-title {
-            color: #606060;
-            margin-left: 1rem;
-            font-size: 0.9rem;
-        }
-
-        .terminal-content {
-            margin-top: 2rem;
-            color: #A9B7C6;
-        }
-
-        .prompt {
-            color: var(--secondary);
-            margin-right: 0.5rem;
-        }
-
-        .cursor {
-            display: inline-block;
-            width: 8px;
-            height: 1.2rem;
-            background: var(--secondary);
-            animation: blink 1s infinite;
-            vertical-align: middle;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        .workflow {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 4rem 0;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .workflow-step {
-            flex: 1;
-            min-width: 250px;
-            text-align: center;
-            position: relative;
-        }
-
-        .workflow-step:not(:last-child)::after {
-            content: '→';
-            position: absolute;
-            right: -1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--secondary);
+        
+        .logo {
             font-size: 2rem;
-        }
-
-        .workflow-icon {
-            font-size: 2.5rem;
-            color: var(--secondary);
-            margin-bottom: 1rem;
-        }
-
-        h1 {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            color: var(--secondary);
-            text-shadow: 0 0 20px rgba(255, 212, 59, 0.3);
-            position: relative;
-        }
-
-        .description {
-            font-size: 1.5rem;
-            max-width: 800px;
-            margin: 1rem auto;
-            color: var(--text);
-            line-height: 1.6;
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 4rem 0;
-        }
-
-        .feature-card {
-            background: #282c34;
-            border-radius: 10px;
-            padding: 2rem;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--secondary);
-            transition: width 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateX(10px);
-        }
-
-        .feature-card:hover::before {
-            width: 8px;
-        }
-
-        .feature-card h3 {
-            color: var(--secondary);
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card p {
-            color: var(--text);
-            line-height: 1.6;
-        }
-
-        .cta-button {
-            display: inline-flex;
-            align-items: center;
-            padding: 1rem 2rem;
-            background: var(--secondary);
-            color: var(--bg-dark);
-            text-decoration: none;
-            border-radius: 5px;
             font-weight: bold;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-            margin-top: 2rem;
+            margin: 0;
         }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 212, 59, 0.3);
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
         }
-
-        .cta-button i {
-            margin-right: 0.5rem;
+        
+        nav {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
         }
-
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .active {
+            border-bottom: 2px solid white;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        
+        .iframe-container {
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 800px; /* Высота может быть изменена */
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 100px 0;
+            display: none;
+        }
+        
+        .iframe-container.loading-active iframe {
+            display: none;
+        }
+        
+        .iframe-container.loading-active .loading {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #212529;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        footer {
+            background-color: #212529;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        
+        .footer-links a {
+            color: #adb5bd;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        /* Адаптивность для мобильных устройств */
         @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            .terminal-window { font-size: 0.9rem; }
-            .description { font-size: 1.2rem; }
+            nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav a {
+                margin: 5px 0;
+            }
+            
+            .iframe-container {
+                height: 600px;
+            }
         }
     </style>
 </head>
 <body>
-    <canvas class="matrix-bg" id="matrix"></canvas>
+    <header>
+        <h1 class="logo">DerX Space</h1>
+        <nav>
+            <a href="#" class="active">Главная</a>
+            <a href="https://derx.space/forum" target="_blank">Форум</a>
+            <a href="https://github.com/derxywat" target="_blank">GitHub</a>
+        </nav>
+    </header>
+    
     <div class="container">
-        <section class="hero">
-            <h1>DerxHost</h1>
-            <p class="description">Твоя личная консоль для хостинга Telegram ботов. Каждому пользователю - свое изолированное пространство.</p>
+        <div class="main-content">
+            <h2>Добро пожаловать на DerX Space</h2>
+            <p>Интерактивный форум встроен ниже:</p>
             
-            <div class="terminal-window">
-                <div class="terminal-header">
-                    <div class="terminal-dots">
-                        <div class="terminal-dot"></div>
-                        <div class="terminal-dot"></div>
-                        <div class="terminal-dot"></div>
-                    </div>
-                    <div class="terminal-title">user@derxhost:~/bots</div>
+            <div class="iframe-container loading-active" id="forumFrame">
+                <iframe src="https://forum.derx.space" id="forum" onload="hideLoading()"></iframe>
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Загрузка форума...</p>
+                    <p><small>Если загрузка занимает длительное время, вы можете <a href="https://forum.derx.space" target="_blank">открыть форум в новом окне</a>.</small></p>
                 </div>
-                <div class="terminal-content">
-                    <div class="code-line"><span class="prompt">$</span> ls</div>
-                    <div class="code-line">📁 my_awesome_bot/</div>
-                    <div class="code-line"><span class="prompt">$</span> cd my_awesome_bot</div>
-                    <div class="code-line"><span class="prompt">$</span> python bot.py</div>
-                    <div class="code-line"><span class="comment"># Бот успешно запущен!</span></div>
-                    <div class="code-line"><span class="prompt">$</span> <span class="cursor"></span></div>
-                </div>
-            </div>
-
-            <a href="https://t.me/DerxSpaceBot" class="cta-button">
-                <i class="fab fa-telegram-plane"></i>
-                Получить доступ
-            </a>
-        </section>
-
-        <div class="workflow">
-            <div class="workflow-step">
-                <i class="fas fa-terminal workflow-icon"></i>
-                <h3>Личная консоль</h3>
-                <p>Доступ к изолированному окружению прямо в Telegram</p>
-            </div>
-            <div class="workflow-step">
-                <i class="fas fa-folder-tree workflow-icon"></i>
-                <h3>Своя директория</h3>
-                <p>Отдельное пространство для файлов каждого бота</p>
-            </div>
-            <div class="workflow-step">
-                <i class="fas fa-play workflow-icon"></i>
-                <h3>Простой запуск</h3>
-                <p>Запускай и управляй ботом через консольные команды</p>
-            </div>
-        </div>
-
-        <div class="features">
-            <div class="feature-card">
-                <h3>Изоляция</h3>
-                <p>Каждый пользователь получает отдельное окружение с личной директорией для своих ботов и файлов.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Консольный доступ</h3>
-                <p>Управляй своим ботом через удобную консоль прямо в Telegram. Запускай, останавливай, редактируй файлы.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Безопасность</h3>
-                <p>Изолированное окружение защищает от конфликтов между ботами и обеспечивает безопасность данных.</p>
             </div>
         </div>
     </div>
-
+    
+    <footer>
+        <p>&copy; 2025 DerX Space. Все права защищены.</p>
+        <div class="footer-links">
+            <a href="https://github.com/derxywat" target="_blank">GitHub</a>
+            <a href="https://t.me/derxywat" target="_blank">Telegram</a>
+        </div>
+    </footer>
+    
     <script>
-        // Матричный эффект на фоне
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const python = "🐍 def class import from return async await".split(" ");
-        const fontSize = 14;
-        const columns = canvas.width / fontSize;
-
-        const drops = [];
-        for (let x = 0; x < columns; x++) {
-            drops[x] = 1;
+        // Функция для скрытия индикатора загрузки после загрузки iframe
+        function hideLoading() {
+            document.getElementById('forumFrame').classList.remove('loading-active');
         }
+        
+        // Обработка ошибки загрузки iframe
+        document.getElementById('forum').onerror = function() {
+            document.querySelector('.loading p').innerText = 'Не удалось загрузить форум. Возможно, сервер временно недоступен.';
+        };
 
-        function draw() {
-            ctx.fillStyle = 'rgba(27, 27, 27, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = '#306998';
-            ctx.font = fontSize + 'px JetBrains Mono';
-
-            for (let i = 0; i < drops.length; i++) {
-                const text = python[Math.floor(Math.random() * python.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-                drops[i]++;
-            }
+        // Проверка доступности форума
+        function checkForumAvailability() {
+            fetch('https://forum.derx.space', { 
+                mode: 'no-cors',
+                method: 'HEAD'
+            })
+            .then(() => {
+                console.log('Форум доступен');
+            })
+            .catch(error => {
+                console.error('Форум недоступен:', error);
+                document.querySelector('.loading p').innerText = 'Не удалось загрузить форум. Возможно, сервер временно недоступен.';
+            });
         }
-
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-
-        setInterval(draw, 35);
+        
+        // Проверяем доступность форума при загрузке страницы
+        window.addEventListener('load', checkForumAvailability);
     </script>
 </body>
-</html> 
+</html>
