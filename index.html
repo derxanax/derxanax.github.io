@@ -3,87 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DerX Space - Форум</title>
+    <title>DerX Space</title>
     <style>
-        /* Стили для полноэкранного отображения */
         html, body {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
             overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
-        .iframe-container {
-            position: fixed;
+        iframe {
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-        
-        iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
-        
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #f8f9fa;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 2;
-        }
-        
-        .iframe-container.loaded .loading {
-            display: none;
-        }
-        
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #212529;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
-    <div class="iframe-container" id="forumFrame">
-        <iframe src="https://forum.derx.space" id="forum" onload="hideLoading()"></iframe>
-        <div class="loading">
-            <div class="spinner"></div>
-            <p>Загрузка форума...</p>
-            <p><small>Если загрузка занимает слишком много времени, <a href="https://forum.derx.space" target="_blank">откройте форум напрямую</a>.</small></p>
-        </div>
-    </div>
-    
-    <script>
-        // Функция для скрытия индикатора загрузки после загрузки iframe
-        function hideLoading() {
-            document.getElementById('forumFrame').classList.add('loaded');
-        }
-        
-        // Обработка ошибки загрузки iframe
-        document.getElementById('forum').onerror = function() {
-            document.querySelector('.loading p').innerText = 'Не удалось загрузить форум. Возможно, сервер временно недоступен.';
-        };
-    </script>
+    <iframe src="https://stages-ethics-red-seeking.trycloudflare.com/" frameborder="0" allowfullscreen></iframe>
 </body>
 </html>
