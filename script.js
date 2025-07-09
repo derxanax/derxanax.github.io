@@ -2,7 +2,7 @@
 
 class ZETLandingPage {
     constructor() {
-        this.launchDate = new Date('2025-07-10T00:00:00');
+        this.launchDate = new Date('2025-07-20T00:00:00');
         this.particles = [];
         this.init();
     }
