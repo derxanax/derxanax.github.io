@@ -1,6 +1,4 @@
-
-
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -11,11 +9,34 @@
             font-family: Arial, sans-serif;
             text-align: center;
             padding: 20px;
+            background-image: url('https://ir.ozone.ru/s3/multimedia-v/c1000/6832977691.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
         }
         #qrcode {
             margin: 20px auto;
             width: 200px;
             height: 200px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 10px;
         }
         a {
             display: block;
@@ -23,16 +44,19 @@
             font-size: 18px;
             color: #1155cc;
             text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-
-  <p> иван марголдин (мой парень) очен крутой <p/>
-
-    <h1>QR-код для Telegram</h1>
-    <div id="qrcode"></div>
-    <a href="https://t.me/PPPOOOLLLMMMAAATTTEEERRRIIII" target="_blank">https://t.me/PPPOOOLLLMMMAAATTTEEERRRIIII</a>
+    <div class="container">
+        <h1>QR-код для Telegram</h1>
+        <div id="qrcode"></div>
+        <a href="https://t.me/PPPOOOLLLMMMAAATTTEEERRRIIII" target="_blank">https://t.me/PPPOOOLLLMMMAAATTTEEERRRIIII</a>
+    </div>
 
     <script>
         new QRCode(document.getElementById("qrcode"), {
