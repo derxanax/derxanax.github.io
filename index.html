@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-
+    <title>ИВАН МАРГОЛДИН (МОЙ ПАРЕНЬ) ОЧЕНЬ КРУТОЙ</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         body {
@@ -68,8 +68,8 @@
 </head>
 <body>
     <div class="container">
-<title>ИВАН МАРГОЛДИН (МОЙ ПАРЕНЬ) ОЧЕНЬ КРУТОЙ</title>
-<h6> ебаный дебил </h6я
+        <h1>ИВАН МАРГОЛДИН (МОЙ ПАРЕНЬ) ОЧЕНЬ КРУТОЙ</h1>
+        <h6>ебаный дебил</h6>
         <div id="qrcode"></div>
         <a href="https://t.me/PPPOOOLLLMMMAAATTTEEERRRIIII" target="_blank">https://t.me/PPPOOOLLLMMMAAATTTEEERRRIIII</a>
     </div>
@@ -87,32 +87,27 @@
         });
         
         // Перехват ввода в консоль
-        let consoleInput = '';
-        
-        // Создаем перехватчик для console.log
         const originalLog = console.log;
         console.log = function(...args) {
-            originalLog.apply(console, args);
-            
             // Проверяем каждый аргумент на наличие слова "попа"
             args.forEach(arg => {
                 if (typeof arg === 'string' && arg.toLowerCase().includes('попа')) {
                     showSecret();
                 }
             });
+            originalLog.apply(console, args);
         };
         
         // Создаем перехватчик для других методов консоли
         ['info', 'warn', 'error'].forEach(method => {
             const originalMethod = console[method];
             console[method] = function(...args) {
-                originalMethod.apply(console, args);
-                
                 args.forEach(arg => {
                     if (typeof arg === 'string' && arg.toLowerCase().includes('попа')) {
                         showSecret();
                     }
                 });
+                originalMethod.apply(console, args);
             };
         });
         
@@ -127,18 +122,20 @@
             }, 3000);
         }
         
-        // Также проверяем ввод напрямую в консоль (для некоторых браузеров)
-        window.addEventListener('load', function() {
-            // Создаем фейковый элемент для перехвата ввода
-            const _log = console.log;
-            console.log = function() {
-                for (let i = 0; i < arguments.length; i++) {
-                    if (typeof arguments[i] === 'string' && arguments[i].toLowerCase().includes('попа')) {
-                        showSecret();
-                    }
-                }
-                _log.apply(console, arguments);
-            };
+        // Проверка ввода через devtools (перехват свойств объекта console)
+        const consoleProps = Object.getOwnPropertyNames(console);
+        consoleProps.forEach(prop => {
+            if (typeof console[prop] === 'function' && prop !== 'log') {
+                const originalFunc = console[prop];
+                console[prop] = function(...args) {
+                    args.forEach(arg => {
+                        if (typeof arg === 'string' && arg.toLowerCase().includes('попа')) {
+                            showSecret();
+                        }
+                    });
+                    return originalFunc.apply(console, args);
+                };
+            }
         });
     </script>
 </body>
