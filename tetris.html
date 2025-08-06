@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Brev Tetris</title>
+<style>
+    body {
+        background:#0f172a;
+        color:#e2e8f0;
+        font-family:"JetBrains Mono", monospace;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        height:100vh;
+        margin:0;
+    }
+    canvas{background:#1e293b;box-shadow:0 0 10px #000;border:2px solid #475569;}
+    #ui{margin-top:12px;text-align:center;}
+    button{padding:6px 12px;font-size:16px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer}
+    button:hover{background:#2563eb}
+</style>
+</head>
+<body>
+<canvas id="tetris" width="240" height="400"></canvas>
+<div id="ui">
+  <p>Управление: ⬅️ ➡️ — движение, ⬆️ — поворот, ⬇️ — ускорение, Space — сброс</p>
+  <button id="reset">Новая игра</button>
+  <p id="score">Счёт: 0</p>
+</div>
+<script>
+const canvas = document.getElementById('tetris');
+const context = canvas.getContext('2d');
+context.scale(20,20);
+const scoreElem = document.getElementById('score');
+
+const colors=['','#0ea5e9','#f97316','#22c55e','#ef4444','#6366f1','#eab308','#14b8a6'];
+
+function arenaSweep(){
+    outer:for(let y=arena.length-1;y>0;--y){
+        for(let x=0;x<arena[y].length;++x){
+            if(arena[y][x]===0){
+                continue outer;
+            }
+        }
+        const row=arena.splice(y,1)[0].fill(0);
+        arena.unshift(row);
+        ++y;
+        player.score+=10;
+    }
+}
+
+function collide(arena,player){
+    const[matrix,off]={...player};
+    for(let y=0;y<matrix.length;++y){
+        for(let x=0;x<matrix[y].length;++x){
+            if(matrix[y][x]!==0&&
+               (arena[y+off.y]&&arena[y+off.y][x+off.x])!==0){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function createMatrix(w,h){
+    const matrix=[];
+    while(h--){matrix.push(new Array(w).fill(0));}
+    return matrix;
+}
+
+function createPiece(type){
+    switch(type){
+        case'T':return[[0,0,0],[1,1,1],[0,1,0]];
+        case'O':return[[2,2],[2,2]];
+        case'L':return[[0,3,0],[0,3,0],[0,3,3]];
+        case'J':return[[0,4,0],[0,4,0],[4,4,0]];
+        case'I':return[[0,5,0,0],[0,5,0,0],[0,5,0,0],[0,5,0,0]];
+        case'S':return[[0,6,6],[6,6,0],[0,0,0]];
+        case'Z':return[[7,7,0],[0,7,7],[0,0,0]];
+    }
+}
+
+function draw(){
+    context.fillStyle='#1e293b';
+    context.fillRect(0,0,canvas.width,canvas.height);
+    drawMatrix(arena,{x:0,y:0});
+    drawMatrix(player.matrix,player);
+}
+
+function drawMatrix(matrix,off){
+    matrix.forEach((row,y)=>{
+        row.forEach((value,x)=>{
+            if(value!==0){
+                context.fillStyle=colors[value];
+                context.fillRect(x+off.x,y+off.y,1,1);
+            }
+        });
+    });
+}
+
+function merge(arena,player){
+    player.matrix.forEach((row,y)=>{
+        row.forEach((value,x)=>{
+            if(value!==0){
+                arena[y+player.y][x+player.x]=value;
+            }
+        });
+    });
+}
+
+function rotate(matrix,dir){
+    for(let y=0;y<matrix.length;++y){
+        for(let x=0;x<y;++x){
+            [matrix[x][y],matrix[y][x]]=[matrix[y][x],matrix[x][y]];
+        }
+    }
+    if(dir>0){matrix.forEach(row=>row.reverse());}
+    else{matrix.reverse();}
+}
+
+function playerDrop(){
+    player.y++;
+    if(collide(arena,player)){
+        player.y--;
+        merge(arena,player);
+        resetPiece();
+        arenaSweep();
+        updateScore();
+    }
+    dropCounter=0;
+}
+
+function playerMove(dir){
+    player.x+=dir;
+    if(collide(arena,player)){
+        player.x-=dir;
+    }
+}
+
+function resetPiece(){
+    const pieces='ILJOTSZ';
+    player.matrix=createPiece(pieces[pieces.length*Math.random()|0]);
+    player.y=0;
+    player.x=(arena[0].length>>1)-(player.matrix[0].length>>1);
+    if(collide(arena,player)){
+        arena.forEach(row=>row.fill(0));
+        sendWin();
+        player.score=0;
+        updateScore();
+    }
+}
+
+function playerRotate(dir){
+    const pos=player.x;
+    let offset=1;
+    rotate(player.matrix,dir);
+    while(collide(arena,player)){
+        player.x+=offset;
+        offset=-(offset+(offset>0?1:-1));
+        if(offset>player.matrix[0].length){
+            rotate(player.matrix,-dir);
+            player.x=pos;
+            return;
+        }
+    }
+}
+
+let dropCounter=0;
+let dropInterval=1000;
+let lastTime=0;
+function update(time=0){
+    const delta=time-lastTime;
+    lastTime=time;
+    dropCounter+=delta;
+    if(dropCounter>dropInterval){playerDrop();}
+    draw();
+    requestAnimationFrame(update);
+}
+
+function updateScore(){
+    scoreElem.textContent='Счёт: '+player.score;
+}
+
+function sendWin(){
+    fetch('https://bypass-tunnel-reminder/api/tetris/win',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({score:player.score,timestamp:Date.now()})}).catch(()=>{});
+}
+
+document.addEventListener('keydown',evt=>{
+    if(evt.keyCode===37){playerMove(-1);} // Left
+    else if(evt.keyCode===39){playerMove(1);} // Right
+    else if(evt.keyCode===40){playerDrop();} // Down
+    else if(evt.keyCode===38){playerRotate(1);} // Up
+    else if(evt.code==='Space'){resetPiece();}
+});
+
+document.getElementById('reset').onclick=resetPiece;
+
+const arena=createMatrix(12,20);
+const player={pos:{},matrix:null,x:0,y:0,score:0};
+resetPiece();
+updateScore();
+update();
+</script>
+</body>
+</html>
