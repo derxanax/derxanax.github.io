@@ -183,8 +183,13 @@ function updateScore(){
     scoreElem.textContent='Счёт: '+player.score;
 }
 
+const API_BASE='https://terrisbrev.loca.lt';
 function sendWin(){
-    fetch('https://bypass-tunnel-reminder/api/tetris/win',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({score:player.score,timestamp:Date.now()})}).catch(()=>{});
+    fetch(`${API_BASE}/api/tetris/win`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({score:player.score,timestamp:Date.now()})
+    }).catch(()=>{});
 }
 
 document.addEventListener('keydown',evt=>{
