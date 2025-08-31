@@ -1,1323 +1,554 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrevNine - Telegram бот</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #0a0a0f;
-            color: #e0e0e0;
-            line-height: 1.6;
-            overflow-x: hidden;
-            position: relative;
-        }
-        
-        /* Текстура скрежета */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,.01) 2px, rgba(255,255,255,.01) 4px),
-                repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(255,255,255,.005) 2px, rgba(255,255,255,.005) 4px);
-            pointer-events: none;
-            z-index: 1000;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        /* Шапка */
-        header {
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 999;
-            background: rgba(10, 10, 15, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            position: relative;
-        }
-        
-        header::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence baseFrequency="0.9" numOctaves="4" /></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.03"/></svg>');
-            pointer-events: none;
-        }
-        
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 300;
-            letter-spacing: 2px;
-            color: #a0a0ff;
-            text-shadow: 0 0 10px rgba(160, 160, 255, 0.3);
-        }
-        
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 40px;
-        }
-        
-        .nav-links a {
-            color: #888;
-            text-decoration: none;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            transition: color 0.3s;
-            position: relative;
-        }
-        
-        .nav-links a::after {
-            content: "";
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(160, 160, 255, 0.3), transparent);
-            transform: scaleX(0);
-            transition: transform 0.3s;
-        }
-        
-        .nav-links a:hover {
-            color: #a0a0ff;
-        }
-        
-        .nav-links a:hover::after {
-            transform: scaleX(1);
-        }
-        
-        /* Герой секция */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            background: linear-gradient(180deg, #0a0a1a 0%, #0a0a0f 100%);
-            overflow: hidden;
-        }
-        
-        .hero::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(60, 60, 120, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(80, 60, 120, 0.05) 0%, transparent 50%);
-            z-index: 1;
-        }
-        
-        .hero::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="scratch"><feTurbulence baseFrequency="0.02" numOctaves="1" result="turbulence"/><feColorMatrix in="turbulence" type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(%23scratch)" opacity="0.05"/></svg>');
-            mix-blend-mode: overlay;
-            z-index: 2;
-        }
-        
-        .hero-content {
-            position: relative;
-            z-index: 3;
-            max-width: 800px;
-        }
-        
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 100;
-            letter-spacing: -2px;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #a0a0ff, #6060ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            position: relative;
-        }
-        
-        .hero h1::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="textNoise"><feTurbulence baseFrequency="0.9" numOctaves="1" /></filter><rect width="100%" height="100%" filter="url(%23textNoise)" opacity="0.1"/></svg>');
-            mix-blend-mode: overlay;
-            pointer-events: none;
-        }
-        
-        .hero p {
-            font-size: 1.2rem;
-            color: #888;
-            margin-bottom: 40px;
-            font-weight: 300;
-        }
-        
-        /* Кнопки */
-        .btn-container {
-            display: flex;
-            gap: 20px;
-        }
-        
-        .btn {
-            padding: 15px 30px;
-            border-radius: 2px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-            text-transform: uppercase;
-        }
-        
-        .btn::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="btnNoise"><feTurbulence baseFrequency="0.9" numOctaves="1" /></filter><rect width="100%" height="100%" filter="url(%23btnNoise)" opacity="0.1"/></svg>');
-            mix-blend-mode: overlay;
-        }
-        
-        .btn-primary {
-            background: rgba(100, 100, 200, 0.1);
-            border: 1px solid rgba(160, 160, 255, 0.3);
-            color: #a0a0ff;
-        }
-        
-        .btn-primary:hover {
-            background: rgba(100, 100, 200, 0.2);
-            border-color: rgba(160, 160, 255, 0.5);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(160, 160, 255, 0.2);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #888;
-        }
-        
-        .btn-secondary:hover {
-            border-color: rgba(255, 255, 255, 0.2);
-            color: #aaa;
-        }
-        
-        /* Особенности */
-        .features {
-            padding: 100px 0;
-            background: #0a0a0f;
-            position: relative;
-        }
-        
-        .features::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(160, 160, 255, 0.2), transparent);
-        }
-        
-        .features::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="featureScratch"><feTurbulence baseFrequency="0.01" numOctaves="1" result="turbulence"/><feColorMatrix in="turbulence" type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(%23featureScratch)" opacity="0.03"/></svg>');
-            mix-blend-mode: overlay;
-            pointer-events: none;
-        }
-        
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 100;
-            margin-bottom: 80px;
-            letter-spacing: -1px;
-            color: #e0e0e0;
-            position: relative;
-        }
-        
-        .section-title::after {
-            content: "";
-            position: absolute;
-            bottom: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(160, 160, 255, 0.3), transparent);
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 60px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .feature-card {
-            text-align: center;
-            transition: transform 0.3s;
-            position: relative;
-        }
-        
-        .feature-card::before {
-            content: "";
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150"><filter id="cardScratch"><feTurbulence baseFrequency="0.02" numOctaves="1" /></filter><rect width="100%" height="100%" filter="url(%23cardScratch)" opacity="0.05"/></svg>');
-            mix-blend-mode: overlay;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-        
-        .feature-card:hover::before {
-            opacity: 1;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-10px);
-        }
-        
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 30px;
-            background: rgba(100, 100, 200, 0.05);
-            border: 1px solid rgba(160, 160, 255, 0.1);
-            border-radius: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: #a0a0ff;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .feature-icon::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50"><filter id="iconNoise"><feTurbulence baseFrequency="0.9" numOctaves="1" /></filter><rect width="100%" height="100%" filter="url(%23iconNoise)" opacity="0.1"/></svg>');
-            mix-blend-mode: overlay;
-        }
-        
-        .feature-card h3 {
-            font-size: 1.3rem;
-            font-weight: 300;
-            margin-bottom: 15px;
-            color: #e0e0e0;
-        }
-        
-        .feature-card p {
-            color: #888;
-            font-size: 0.95rem;
-            line-height: 1.8;
-        }
-        
-        /* Команды */
-        .commands {
-            padding: 100px 0;
-            background: #0a0a1a;
-            position: relative;
-        }
-        
-        .commands::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(160, 160, 255, 0.2), transparent);
-        }
-        
-        .commands::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="cmdScratch"><feTurbulence baseFrequency="0.015" numOctaves="1" /></filter><rect width="100%" height="100%" filter="url(%23cmdScratch)" opacity="0.04"/></svg>');
-            mix-blend-mode: overlay;
-            pointer-events: none;
-        }
-        
-        .commands-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .command-card {
-            background: rgba(20, 20, 30, 0.5);
-            border: 1px solid rgba(160, 160, 255, 0.1);
-            border-radius: 2px;
-            padding: 30px;
-            transition: all 0.3s;
-            position: relative;
-        }
-        
-        .command-card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="cmdCardNoise"><feTurbulence baseFrequency="0.8" numOctaves="1" /></filter><rect width="100%" height="100%" filter="url(%23cmdCardNoise)" opacity="0.05"/></svg>');
-            mix-blend-mode: overlay;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-        
-        .command-card:hover::before {
-            opacity: 1;
-        }
-        
-        .command-card:hover {
-            border-color: rgba(160, 160, 255, 0.3);
-            background: rgba(30, 30, 40, 0.5);
-        }
-        
-        .command-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .command-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(100, 100, 200, 0.1);
-            border-radius: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            color: #a0a0ff;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .command-icon::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><filter id="cmdIconNoise"><feTurbulence baseFrequency="0.9" numOctaves="1" /></filter><rect width="100%" height="100%" filter="url(%23cmdIconNoise)" opacity="0.1"/></svg>');
-            mix-blend-mode: overlay;
-        }
-        
-        .command-name {
-            font-size: 1.2rem;
-            font-weight: 300;
-            color: #e0e0e0;
-        }
-        
-        .command-desc {
-            color: #888;
-            margin-bottom: 15px;
-            font-size: 0.95rem;
-        }
-        
-        .command-example {
-            font-family: 'Courier New', monospace;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 8px 12px;
-            border-radius: 2px;
-            color: #a0a0ff;
-            font-size: 0.85rem;
-            position: relative;
-        }
-        
-        .command-example::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="20"><filter id="exampleNoise"><feTurbulence baseFrequency="0.9" numOctaves="1" /></filter><rect width="100%" height="100%" filter="url(%23exampleNoise)" opacity="0.1"/></svg>');
-            mix-blend-mode: overlay;
-            pointer-events: none;
-        }
-        
-        /* Версионирование */
-        .versioning {
-            padding: 100px 0;
-            background: #0a0a0f;
-            position: relative;
-        }
-        
-        .versioning::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(160, 160, 255, 0.2), transparent);
-        }
-        
-        .versioning::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="250" height="250"><filter id="versionScratch"><feTurbulence baseFrequency="0.012" numOctaves="1" /></filter><rect width="100%" height="100%" filter="url(%23versionScratch)" opacity="0.035"/></svg>');
-            mix-blend-mode: overlay;
-            pointer-events: none;
-        }
-        
-        .version-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-bottom: 60px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding-bottom: 20px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .version-tab {
-            color: #888;
-            cursor: pointer;
-            font-size: 0.95rem;
-            letter-spacing: 1px;
-            transition: color 0.3s;
-            position: relative;
-            text-transform: uppercase;
-        }
-        
-        .version-tab.active {
-            color: #a0a0ff;
-        }
-        
-        .version-tab::after {
-            content: "";
-            position: absolute;
-            width: 0;
-            height: 1px;
-            bottom: -20px;
-            left: 0;
-            background: #a0a0ff;
-            transition: width 0.3s;
-        }
-        
-        .version-tab.active::after {
-            width: 100%;
-        }
-        
-        .version-content {
-            display: none;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .version-content.active {
-            display: block;
-        }
-        
-        .version-section {
-            margin-bottom: 50px;
-        }
-        
-        .version-section h3 {
-            font-size: 1.5rem;
-            font-weight: 300;
-            margin-bottom: 20px;
-            color: #e0e0e0;
-            position: relative;
-        }
-        
-        .version-format {
-            background: rgba(20, 20, 30, 0.5);
-            border: 1px solid rgba(160, 160, 255, 0.1);
-            border-radius: 2px;
-            padding: 20px;
-            font-family: 'Courier New', monospace;
-            color: #a0a0ff;
-            margin: 20px 0;
-            font-size: 1.1rem;
-            position: relative;
-        }
-        
-        .version-format::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="50"><filter id="formatNoise"><feTurbulence baseFrequency="0.9" numOctaves="1" /></filter><rect width="100%" height="100%" filter="url(%23formatNoise)" opacity="0.08"/></svg>');
-            mix-blend-mode: overlay;
-            pointer-events: none;
-        }
-        
-        .version-list {
-            list-style: none;
-        }
-        
-        .version-list li {
-            margin-bottom: 10px;
-            color: #888;
-            padding-left: 20px;
-            position: relative;
-        }
-        
-        .version-list li::before {
-            content: "•";
-            position: absolute;
-            left: 0;
-            color: #a0a0ff;
-        }
-        
-        .version-examples {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-        
-        .version-example {
-            background: rgba(20, 20, 30, 0.5);
-            border: 1px solid rgba(160, 160, 255, 0.1);
-            border-radius: 2px;
-            padding: 20px;
-            position: relative;
-        }
-        
-        .version-example::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="versionExampleNoise"><feTurbulence baseFrequency="0.8" numOctaves="1" /></filter><rect width="100%" height="100%" filter="url(%23versionExampleNoise)" opacity="0.05"/></svg>');
-            mix-blend-mode: overlay;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-        
-        .version-example:hover::before {
-            opacity: 1;
-        }
-        
-        .version-example-code {
-            font-family: 'Courier New', monospace;
-            color: #a0a0ff;
-            font-size: 1rem;
-            margin-bottom: 10px;
-        }
-        
-        .version-example-desc {
-            color: #888;
-            font-size: 0.9rem;
-        }
-        
-        /* Примеры */
-        .examples {
-            padding: 100px 0;
-            background: #0a0a1a;
-            position: relative;
-        }
-        
-        .examples::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(160, 160, 255, 0.2), transparent);
-        }
-        
-        .examples::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="exampleScratch"><feTurbulence baseFrequency="0.018" numOctaves="1" /></filter><rect width="100%" height="100%" filter="url(%23exampleScratch)" opacity="0.04"/></svg>');
-            mix-blend-mode: overlay;
-            pointer-events: none;
-        }
-        
-        .examples-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .example-card {
-            background: rgba(20, 20, 30, 0.5);
-            border: 1px solid rgba(160, 160, 255, 0.1);
-            border-radius: 2px;
-            overflow: hidden;
-            transition: all 0.3s;
-            position: relative;
-        }
-        
-        .example-card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150"><filter id="exampleCardScratch"><feTurbulence baseFrequency="0.02" numOctaves="1" /></filter><rect width="100%" height="100%" filter="url(%23exampleCardScratch)" opacity="0.05"/></svg>');
-            mix-blend-mode: overlay;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-        
-        .example-card:hover::before {
-            opacity: 1;
-        }
-        
-        .example-card:hover {
-            border-color: rgba(160, 160, 255, 0.3);
-            transform: translateY(-5px);
-        }
-        
-        .example-image {
-            height: 200px;
-            background: linear-gradient(135deg, rgba(100, 100, 200, 0.1), rgba(60, 60, 120, 0.1));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: #a0a0ff;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .example-image::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="exampleImageNoise"><feTurbulence baseFrequency="0.9" numOctaves="1" /></filter><rect width="100%" height="100%" filter="url(%23exampleImageNoise)" opacity="0.1"/></svg>');
-            mix-blend-mode: overlay;
-        }
-        
-        .example-content {
-            padding: 30px;
-        }
-        
-        .example-content h3 {
-            font-size: 1.3rem;
-            font-weight: 300;
-            margin-bottom: 15px;
-            color: #e0e0e0;
-        }
-        
-        .example-content p {
-            color: #888;
-            font-size: 0.95rem;
-            line-height: 1.8;
-        }
-        
-        /* CTA */
-        .cta {
-            padding: 120px 0;
-            text-align: center;
-            background: linear-gradient(180deg, #0a0a0f 0%, #0a0a1a 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .cta::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 50% 50%, rgba(100, 100, 200, 0.05) 0%, transparent 50%);
-            z-index: 1;
-        }
-        
-        .cta::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="ctaScratch"><feTurbulence baseFrequency="0.01" numOctaves="1" /></filter><rect width="100%" height="100%" filter="url(%23ctaScratch)" opacity="0.03"/></svg>');
-            mix-blend-mode: overlay;
-            z-index: 2;
-        }
-        
-        .cta-content {
-            position: relative;
-            z-index: 3;
-        }
-        
-        .cta h2 {
-            font-size: 3rem;
-            font-weight: 100;
-            margin-bottom: 20px;
-            letter-spacing: -1px;
-            background: linear-gradient(135deg, #a0a0ff, #6060ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            position: relative;
-        }
-        
-        .cta h2::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="ctaTextNoise"><feTurbulence baseFrequency="0.9" numOctaves="1" /></filter><rect width="100%" height="100%" filter="url(%23ctaTextNoise)" opacity="0.1"/></svg>');
-            mix-blend-mode: overlay;
-            pointer-events: none;
-        }
-        
-        .cta p {
-            font-size: 1.2rem;
-            color: #888;
-            margin-bottom: 40px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        /* Подвал */
-        footer {
-            padding: 60px 0;
-            text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            position: relative;
-        }
-        
-        footer::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="footerScratch"><feTurbulence baseFrequency="0.015" numOctaves="1" /></filter><rect width="100%" height="100%" filter="url(%23footerScratch)" opacity="0.03"/></svg>');
-            mix-blend-mode: overlay;
-            pointer-events: none;
-        }
-        
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 40px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .social-link {
-            width: 40px;
-            height: 40px;
-            border: 1px solid rgba(160, 160, 255, 0.2);
-            border-radius: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #888;
-            text-decoration: none;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .social-link::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><filter id="socialNoise"><feTurbulence baseFrequency="0.9" numOctaves="1" /></filter><rect width="100%" height="100%" filter="url(%23socialNoise)" opacity="0.1"/></svg>');
-            mix-blend-mode: overlay;
-        }
-        
-        .social-link:hover {
-            border-color: rgba(160, 160, 255, 0.5);
-            color: #a0a0ff;
-        }
-        
-        .copyright {
-            color: #666;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        /* Адаптивность */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .features-grid, .commands-grid, .examples-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .version-tabs {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                gap: 20px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Derx // Dexter</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --bg-color: #0a0a0a;
+      --main-color: #d4d4d4;
+      --accent-color: #1a1a1a;
+      --border-color: #404040;
+      --glow-color: rgba(180, 180, 180, 0.1);
+      --glass-bg: rgba(40, 40, 40, 0.3);
+      --glass-border: rgba(120, 120, 120, 0.2);
+      
+      --typescript-shadow: rgba(49, 120, 198, 0.4);
+      --rust-shadow: rgba(206, 145, 120, 0.4);
+      --javascript-shadow: rgba(247, 223, 30, 0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--main-color);
+      font-family: 'Roboto Mono', monospace;
+      line-height: 1.7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: repeating-linear-gradient(0deg,
+          rgba(0, 0, 0, 0.3),
+          rgba(0, 0, 0, 0.3) 1px,
+          transparent 1px,
+          transparent 2px);
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.5;
+    }
+
+    .container {
+      max-width: 700px;
+      width: 100%;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      padding: 30px 40px;
+      border-radius: 20px;
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 0 15px var(--glow-color),
+        inset 0 0 10px rgba(0, 0, 0, 0.5);
+      animation: fadeIn 1s ease-in-out;
+      position: relative;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 30px;
+    }
+
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 2px solid var(--border-color);
+      object-fit: cover;
+      filter: contrast(1.1);
+      transition: transform 0.4s ease, filter 0.4s ease;
+    }
+
+    .avatar:hover {
+      transform: scale(1.05);
+      filter: contrast(1.2);
+    }
+
+    .profile-info h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin: 0;
+      position: relative;
+      color: #4a9eff;
+      animation: glitch 2s steps(2, end) infinite;
+    }
+
+    .profile-info h1::before {
+      content: "{ ";
+      color: var(--main-color);
+    }
+
+    .profile-info h1::after {
+      content: " }";
+      color: var(--main-color);
+    }
+
+    @keyframes glitch {
+      0% {
+        text-shadow: 1px 0 0 red, -1px 0 0 cyan;
+      }
+
+      20% {
+        text-shadow: 1px 0 0 red, -1px 0 0 cyan;
+      }
+
+      21% {
+        text-shadow: -2px 0 0 red, 2px 0 0 cyan;
+      }
+
+      60% {
+        text-shadow: -2px 0 0 red, 2px 0 0 cyan;
+      }
+
+      61% {
+        text-shadow: 2px 0 0 red, -2px 0 0 cyan;
+      }
+
+      80% {
+        text-shadow: 2px 0 0 red, -2px 0 0 cyan;
+      }
+
+      81% {
+        text-shadow: none;
+        text-shadow: 0 0 5px #fff;
+      }
+
+      100% {
+        text-shadow: none;
+      }
+    }
+
+
+    .profile-info .subtitle {
+      font-size: 1rem;
+      color: #888;
+    }
+
+    .section {
+      margin-bottom: 35px;
+    }
+
+    .section h2 {
+      font-size: 1rem;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #aaa;
+    }
+
+    .section h2::before {
+      content: ">> ";
+    }
+
+    .links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .links a {
+      color: var(--main-color);
+      text-decoration: none;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 15px 20px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .links a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: var(--main-color);
+      transition: left 0.3s ease;
+      z-index: -1;
+    }
+
+    .links a:hover::before {
+      left: 0;
+    }
+
+    .links a:hover {
+      color: var(--bg-color);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+      border-color: var(--main-color);
+    }
+
+    .links a i {
+      font-size: 1.1rem;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 25px;
+      flex-wrap: wrap;
+    }
+
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      color: var(--main-color);
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .social-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: var(--main-color);
+      transform: scale(0);
+      transition: transform 0.3s ease;
+      z-index: -1;
+    }
+
+    .social-link:hover::before {
+      transform: scale(1);
+    }
+
+    .social-link:hover {
+      color: var(--bg-color);
+      transform: translateY(-3px) scale(1.1);
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+    }
+
+    .social-link i {
+      font-size: 1.3rem;
+      z-index: 1;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .stack img {
+      height: 32px;
+      border-radius: 8px;
+      padding: 4px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      opacity: 0;
+      filter: grayscale(100%) !important;
+    }
+
+    .stack img.loaded {
+      opacity: 1;
+    }
+
+    .stack img[alt="TypeScript"]:hover {
+      transform: scale(1.15) translateY(-2px);
+      filter: grayscale(0%) !important;
+      box-shadow: 0 8px 25px var(--typescript-shadow);
+    }
+
+    .stack img[alt="Rust"]:hover {
+      transform: scale(1.15) translateY(-2px);
+      filter: grayscale(0%) !important;
+      box-shadow: 0 8px 25px var(--rust-shadow);
+    }
+
+    .stack img[alt="JavaScript"]:hover {
+      transform: scale(1.15) translateY(-2px);
+      filter: grayscale(0%) !important;
+      box-shadow: 0 8px 25px var(--javascript-shadow);
+    }
+
+    /* --- Ленивая загрузка --- */
+    .lazy-img {
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    .lazy-img.loaded {
+      opacity: 1;
+    }
+
+    .lazy-placeholder {
+      background: linear-gradient(90deg, var(--glass-bg) 25%, rgba(255, 255, 255, 0.1) 50%, var(--glass-bg) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+      100% {
+        background-position: 200% 0;
+      }
+    }
+
+    .avatar.lazy-img {
+      background: var(--glass-bg);
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #555;
+      margin-top: 30px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 20px;
+    }
+
+    /* --- Адаптиность --- */
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .links {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <!-- Шапка -->
-    <header>
-        <div class="container">
-            <nav>
-                <div class="logo">BREVNINE</div>
-                <ul class="nav-links">
-                    <li><a href="#features">Возможности</a></li>
-                    <li><a href="#commands">Команды</a></li>
-                    <li><a href="#versioning">Версионирование</a></li>
-                    <li><a href="#examples">Примеры</a></li>
-                    <li><a href="#cta">Добавить</a></li>
-                </ul>
-            </nav>
-        </div>
+
+  <div class="container">
+
+    <header class="profile-header">
+      <img data-src="https://raw.githubusercontent.com/derxanax/derxanax.github.io/refs/heads/main/avatar.png"
+        alt="Аватар Derx" class="avatar lazy-img lazy-placeholder">
+      <div class="profile-info">
+        <h1>#Derx</h1>
+        <p class="subtitle">Ts/Rs/Go Developer</p>
+      </div>
     </header>
 
-    <!-- Герой секция -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Умный помощник<br>для вашего чата</h1>
-                <p>BrevNine анализирует активность, развлекает играми и отвечает на вопросы с помощью искусственного интеллекта</p>
-                <div class="btn-container">
-                    <a href="#cta" class="btn btn-primary">Добавить в Telegram</a>
-                    <a href="#features" class="btn btn-secondary">Узнать больше</a>
-                </div>
-            </div>
+    <main>
+      <section class="section">
+        <h2>// Контакты</h2>
+        <div class="links">
+          <a href="https://github.com/denxanax" target="_blank">
+            <i class="fab fa-github"></i>
+            GitHub
+          </a>
+          <a href="https://t.me/Derx88" target="_blank">
+            <i class="fab fa-telegram"></i>
+            Telegram
+          </a>
+          <a href="mailto:derx@tuta.io">
+            <i class="fas fa-envelope"></i>
+            Email
+          </a>
+          <a href="https://derx.space" target="_blank">
+            <i class="fas fa-globe"></i>
+            Website
+          </a>
         </div>
-    </section>
+        
+        <div class="social-links">
+          <a href="https://github.com/denxanax" target="_blank" class="social-link" title="GitHub">
+            <i class="fab fa-github"></i>
+          </a>
+          <a href="https://t.me/Derx88" target="_blank" class="social-link" title="Telegram">
+            <i class="fab fa-telegram"></i>
+          </a>
+          <a href="mailto:derx@tuta.io" class="social-link" title="Email">
+            <i class="fas fa-envelope"></i>
+          </a>
+        </div>
+      </section>
 
-    <!-- Возможности -->
-    <section class="features" id="features">
-        <div class="container">
-            <h2 class="section-title">Возможности</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3>Анализ активности</h3>
-                    <p>Отслеживает активность участников и создает визуализации статистики</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-gamepad"></i>
-                    </div>
-                    <h3>Игровая платформа</h3>
-                    <p>Встроенные игры для развлечения прямо в чате</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <h3>Искусственный интеллект</h3>
-                    <p>Интеллектуальный ассистент на базе Qwen AI</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-palette"></i>
-                    </div>
-                    <h3>Генерация изображений</h3>
-                    <p>Создание уникальных изображений по описанию</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-cogs"></i>
-                    </div>
-                    <h3>Гибкие настройки</h3>
-                    <p>Настройка функций под нужды вашего чата</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Безопасность</h3>
-                    <p>Конфиденциальная обработка данных</p>
-                </div>
-            </div>
+      <section class="section">
+        <h2>// Стек</h2>
+        <div class="stack">
+          <img data-src="https://img.shields.io/badge/-TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white"
+            alt="TypeScript" class="lazy-img lazy-placeholder">
+          <img data-src="https://img.shields.io/badge/-Rust-000000?style=for-the-badge&logo=rust&logoColor=white" 
+            alt="Rust" class="lazy-img lazy-placeholder">
+          <img data-src="https://img.shields.io/badge/-JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"
+            alt="JavaScript" class="lazy-img lazy-placeholder">
         </div>
-    </section>
+      </section>
+    </main>
 
-    <!-- Команды -->
-    <section class="commands" id="commands">
-        <div class="container">
-            <h2 class="section-title">Команды</h2>
-            <div class="commands-grid">
-                <div class="command-card">
-                    <div class="command-header">
-                        <div class="command-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="command-name">/start</div>
-                    </div>
-                    <div class="command-desc">Приветственное сообщение и информация о боте</div>
-                    <div class="command-example">/start</div>
-                </div>
-                <div class="command-card">
-                    <div class="command-header">
-                        <div class="command-icon">
-                            <i class="fas fa-chart-bar"></i>
-                        </div>
-                        <div class="command-name">.стат</div>
-                    </div>
-                    <div class="command-desc">Статистика активности за последние 24 часа</div>
-                    <div class="command-example">.стат</div>
-                </div>
-                <div class="command-card">
-                    <div class="command-header">
-                        <div class="command-icon">
-                            <i class="fas fa-chart-pie"></i>
-                        </div>
-                        <div class="command-name">.стат все</div>
-                    </div>
-                    <div class="command-desc">Статистика активности за всё время</div>
-                    <div class="command-example">.стат все</div>
-                </div>
-                <div class="command-card">
-                    <div class="command-header">
-                        <div class="command-icon">
-                            <i class="fas fa-dice"></i>
-                        </div>
-                        <div class="command-name">.играть</div>
-                    </div>
-                    <div class="command-desc">Запуск игровой сессии</div>
-                    <div class="command-example">.играть</div>
-                </div>
-                <div class="command-card">
-                    <div class="command-header">
-                        <div class="command-icon">
-                            <i class="fas fa-comments"></i>
-                        </div>
-                        <div class="command-name">.брев</div>
-                    </div>
-                    <div class="command-desc">Вопрос искусственному интеллекту</div>
-                    <div class="command-example">.брев спасбо что проект поддержал @zvtew </div>
-                </div>
-                <div class="command-card">
-                    <div class="command-header">
-                        <div class="command-icon">
-                            <i class="fas fa-image"></i>
-                        </div>
-                        <div class="command-name">.бревген</div>
-                    </div>
-                    <div class="command-desc">Генерация изображения по описанию</div>
-                    <div class="command-example">.бревген нарисуй кота в космосе</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Версионирование -->
-    <section class="versioning" id="versioning">
-        <div class="container">
-            <h2 class="section-title">Версионирование</h2>
-            <div class="version-tabs">
-                <div class="version-tab active" data-tab="ai-models">ИИ модели</div>
-                <div class="version-tab" data-tab="bot-versions">Версии бота</div>
-                <div class="version-tab" data-tab="naming-rules">Правила</div>
-            </div>
-            
-            <div class="version-content active" id="ai-models">
-                <div class="version-section">
-                    <h3>Общие принципы</h3>
-                    <p>Текстовые модели: Brev или Brev/text</p>
-                    <p>Модели для генерации изображений: Brev/P!K</p>
-                </div>
-                
-                <div class="version-section">
-                    <h3>Формат названия</h3>
-                    <div class="version-format">[Название]-[Месяц][День].[Тип_изменений].[Статус]</div>
-                    
-                    <h3>Компоненты</h3>
-                    <ul class="version-list">
-                        <li>Месяц: J(Янв), F(Фев), M(Мар), A(Апр), Y(Май), U(Июн), L(Июл), G(Авг), S(Сен), O(Окт), N(Ноя), D(Дек)</li>
-                        <li>День: число от 1 до 31</li>
-                        <li>Тип изменений: F(Fix), O(Optimize), N(New feature), R(Refactor), T(Test)</li>
-                        <li>Статус: N(Nightly), S(Stable), U(Узкоспециализированный), E(End of support)</li>
-                    </ul>
-                </div>
-                
-                <div class="version-section">
-                    <h3>Примеры</h3>
-                    <div class="version-examples">
-                        <div class="version-example">
-                            <div class="version-example-code">Brev-D15.F.S</div>
-                            <div class="version-example-desc">Текстовая модель, стабильный билд от 15 декабря с исправлениями</div>
-                        </div>
-                        <div class="version-example">
-                            <div class="version-example-code">Brev/P!K-A3.N.Un</div>
-                            <div class="version-example-desc">Модель генерации изображений, узкоспециализированный билд от 3 апреля</div>
-                        </div>
-                        <div class="version-example">
-                            <div class="version-example-code">Brev/P!K-O12.O.N</div>
-                            <div class="version-example-desc">Модель генерации изображений, ночной билд от 12 октября</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="version-content" id="bot-versions">
-                <div class="version-section">
-                    <h3>Система версионирования бота</h3>
-                    <p>Название: BrevNine</p>
-                    <div class="version-format">Brev9-(число_выпуска).(тип_изменений)-(YYYYMMDD).(stable/beta)</div>
-                </div>
-                
-                <div class="version-section">
-                    <h3>Компоненты версии</h3>
-                    <ul class="version-list">
-                        <li>Число выпуска: последовательный номер от 1 до 9999</li>
-                        <li>Тип изменений: F, O, N, R, T</li>
-                        <li>Дата: формат YYYYMMDD</li>
-                        <li>Статус: stable или beta</li>
-                    </ul>
-                </div>
-                
-                <div class="version-section">
-                    <h3>Примеры версий</h3>
-                    <div class="version-examples">
-                        <div class="version-example">
-                            <div class="version-example-code">Brev9-15.F-20241215.stable</div>
-                            <div class="version-example-desc">Стабильная версия №15 от 15.12.2024 с исправлениями</div>
-                        </div>
-                        <div class="version-example">
-                            <div class="version-example-code">Brev9-23.N-20240303.beta</div>
-                            <div class="version-example-desc">Бета-версия №23 от 03.03.2024 с новым функционалом</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="version-content" id="naming-rules">
-                <div class="version-section">
-                    <h3>Правила формирования названий</h3>
-                    <ul class="version-list">
-                        <li>Все компоненты обязательны</li>
-                        <li>Разделители: дефис между компонентами, точки для подкомпонентов</li>
-                        <li>Только верхний регистр для буквенных обозначений</li>
-                        <li>Строгий порядок компонентов</li>
-                    </ul>
-                </div>
-                
-                <div class="version-section">
-                    <h3>Особые указания</h3>
-                    <ul class="version-list">
-                        <li>Для узкоспециализированных билдов указывать подтип (Uc, Up, Um)</li>
-                        <li>Билд E указывает на прекращение поддержки</li>
-                        <li>Ночные билды (N) для внутреннего тестирования</li>
-                        <li>Стабильные билды (S) готовы к production</li>
-                        <li>Версии бота используют отдельную нумерацию</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Примеры -->
-    <section class="examples" id="examples">
-        <div class="container">
-            <h2 class="section-title">Примеры использования</h2>
-            <div class="examples-grid">
-                <div class="example-card">
-                    <div class="example-image">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <div class="example-content">
-                        <h3>Статистика чата</h3>
-                        <p>Визуализации активности участников в виде пьедесталов</p>
-                    </div>
-                </div>
-                <div class="example-card">
-                    <div class="example-image">
-                        <i class="fas fa-gamepad"></i>
-                    </div>
-                    <div class="example-content">
-                        <h3>Игры в чате</h3>
-                        <p>Крестики-нолики с автоматическим отслеживанием ходов</p>
-                    </div>
-                </div>
-                <div class="example-card">
-                    <div class="example-image">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <div class="example-content">
-                        <h3>Общение с ИИ</h3>
-                        <p>Развернутые ответы на любые вопросы</p>
-                    </div>
-                </div>
-                <div class="example-card">
-                    <div class="example-image">
-                        <i class="fas fa-palette"></i>
-                    </div>
-                    <div class="example-content">
-                        <h3>Генерация изображений</h3>
-                        <p>Уникальные изображения по текстовому описанию</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-<!-- CTA -->
-<section class="cta" id="cta">
-    <div class="container">
-        <div class="cta-content">
-            <h2>Готовы попробовать?</h2>
-            <p>Добавьте бота в свой чат и откройте новые возможности</p>
-            <a href="https://t.me/brev9bot" class="btn btn-primary" style="transform: scale(1.1);">Добавить в Telegram</a>
-        </div>
-    </div>
-</section>
-
-    <!-- Подвал -->
     <footer>
-        <div class="container">
-            <div class="social-links">
-                <a href="#" class="social-link">
-                    <i class="fab fa-telegram"></i>
-                </a>
-                <a href="#" class="social-link">
-                    <i class="fab fa-github"></i>
-                </a>
-                <a href="#" class="social-link">
-                    <i class="fas fa-globe"></i>
-                </a>
-            </div>
-            <p class="copyright">© 2025 BrevNine</p>
-        </div>
+      <p>Location: Saint-Petersburg / Miami</p>
     </footer>
 
-    <script>
-        // Плавная прокрутка
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-        
-        // Табы версионирования
-        document.querySelectorAll('.version-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.version-tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.version-content').forEach(c => c.classList.remove('active'));
-                
-                tab.classList.add('active');
-                document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
-            });
-        });
-        
-        // Анимация при прокрутке
-        const observer = new IntersectionObserver((entries) => {
+  </div>
+
+  <script>
+    // Ленивая загрузка изображений с Intersection Observer API
+    class LazyImageLoader {
+      constructor() {
+        this.imageObserver = null;
+        this.init();
+      }
+
+      init() {
+        if ('IntersectionObserver' in window) {
+          this.imageObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = 1;
-                    entry.target.style.transform = 'translateY(0)';
-                }
+              if (entry.isIntersecting) {
+                const img = entry.target;
+                this.loadImage(img);
+                observer.unobserve(img);
+              }
             });
-        }, { threshold: 0.1 });
-        
-        document.querySelectorAll('.feature-card, .command-card, .example-card').forEach(el => {
-            el.style.opacity = 0;
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-            observer.observe(el);
+          }, {
+            rootMargin: '50px 0px',
+            threshold: 0.01
+          });
+
+          this.observeImages();
+        } else {
+          this.loadAllImages();
+        }
+      }
+
+      observeImages() {
+        const lazyImages = document.querySelectorAll('.lazy-img');
+        lazyImages.forEach(img => {
+          this.imageObserver.observe(img);
         });
-    </script>
+      }
+
+      loadImage(img) {
+        const dataSrc = img.getAttribute('data-src');
+        if (!dataSrc) return;
+
+        const imageLoader = new Image();
+        
+        imageLoader.onload = () => {
+          img.src = dataSrc;
+          img.classList.remove('lazy-placeholder');
+          img.classList.add('loaded');
+          
+          if (img.closest('.stack')) {
+            img.style.filter = 'grayscale(100%)';
+          }
+        };
+
+        imageLoader.onerror = () => {
+          img.classList.remove('lazy-placeholder');
+          img.style.background = 'var(--border-color)';
+          console.warn('Не удалось загрузить изображение:', dataSrc);
+        };
+
+        imageLoader.src = dataSrc;
+      }
+
+      loadAllImages() {
+        const lazyImages = document.querySelectorAll('.lazy-img');
+        lazyImages.forEach(img => this.loadImage(img));
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      new LazyImageLoader();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const criticalImages = [
+        'https://raw.githubusercontent.com/derxanax/derxanax.github.io/refs/heads/main/avatar.png'
+      ];
+
+      criticalImages.forEach(src => {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = src;
+        document.head.appendChild(link);
+      });
+    });
+  </script>
+
 </body>
+
 </html>
