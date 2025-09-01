@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +9,6 @@
   <style>
     /* --- Google Font --- */
     @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
-
     /* --- CSS переменные --- */
     :root {
       --bg-color: #0a0a0a;
@@ -26,18 +24,15 @@
       --rust-shadow: rgba(206, 145, 120, 0.4);
       --javascript-shadow: rgba(247, 223, 30, 0.4);
     }
-
     /* --- Глобальные стили --- */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
     html {
       scroll-behavior: smooth;
     }
-
     body {
       background-color: var(--bg-color);
       color: var(--main-color);
@@ -50,7 +45,6 @@
       padding: 20px;
       overflow-x: hidden;
     }
-
     /* --- Эффект старого монитора (Scanlines) --- */
     body::after {
       content: "";
@@ -68,7 +62,6 @@
       z-index: 9999;
       opacity: 0.5;
     }
-
     /* --- Основной контейнер --- */
     .container {
       max-width: 700px;
@@ -85,20 +78,17 @@
       animation: fadeIn 1s ease-in-out;
       position: relative;
     }
-
     /* --- Анимация появления --- */
     @keyframes fadeIn {
       from {
         opacity: 0;
         transform: translateY(-20px) scale(0.98);
       }
-
       to {
         opacity: 1;
         transform: translateY(0) scale(1);
       }
     }
-
     /* --- Шапка профиля --- */
     .profile-header {
       display: flex;
@@ -109,7 +99,6 @@
       border-bottom: 1px solid var(--border-color);
       padding-bottom: 30px;
     }
-
     .avatar {
       width: 100px;
       height: 100px;
@@ -119,12 +108,10 @@
       filter: contrast(1.1);
       transition: transform 0.4s ease, filter 0.4s ease;
     }
-
     .avatar:hover {
       transform: scale(1.05);
       filter: contrast(1.2);
     }
-
     .profile-info h1 {
       font-size: 2.2rem;
       font-weight: 700;
@@ -133,64 +120,51 @@
       color: #4a9eff;
       animation: glitch 2s steps(2, end) infinite;
     }
-
     .profile-info h1::before {
       content: "{ ";
       color: var(--main-color);
     }
-
     .profile-info h1::after {
       content: " }";
       color: var(--main-color);
     }
-
     /* --- Glitch анимация для заголовка --- */
     @keyframes glitch {
       0% {
         text-shadow: 1px 0 0 red, -1px 0 0 cyan;
       }
-
       20% {
         text-shadow: 1px 0 0 red, -1px 0 0 cyan;
       }
-
       21% {
         text-shadow: -2px 0 0 red, 2px 0 0 cyan;
       }
-
       60% {
         text-shadow: -2px 0 0 red, 2px 0 0 cyan;
       }
-
       61% {
         text-shadow: 2px 0 0 red, -2px 0 0 cyan;
       }
-
       80% {
         text-shadow: 2px 0 0 red, -2px 0 0 cyan;
       }
-
       81% {
         text-shadow: none;
         text-shadow: 0 0 5px #fff;
       }
-
       100% {
         text-shadow: none;
       }
     }
 
-
     .profile-info .subtitle {
       font-size: 1rem;
       color: #888;
     }
-
     /* --- Секции --- */
     .section {
       margin-bottom: 35px;
     }
-
     .section h2 {
       font-size: 1rem;
       margin-bottom: 20px;
@@ -198,18 +172,15 @@
       letter-spacing: 2px;
       color: #aaa;
     }
-
     .section h2::before {
       content: ">> ";
     }
-
     /* --- Ссылки и контакты --- */
     .links {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 15px;
     }
-
     .links a {
       color: var(--main-color);
       text-decoration: none;
@@ -229,7 +200,6 @@
       position: relative;
       overflow: hidden;
     }
-
     .links a::before {
       content: '';
       position: absolute;
@@ -241,77 +211,72 @@
       transition: left 0.3s ease;
       z-index: -1;
     }
-
     .links a:hover::before {
       left: 0;
     }
-
     .links a:hover {
       color: var(--bg-color);
       transform: translateY(-2px);
       box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
       border-color: var(--main-color);
     }
-
     .links a i {
       font-size: 1.1rem;
     }
-
-    /* --- Социальные иконки --- */
-    .social-links {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 25px;
-      flex-wrap: wrap;
-    }
-
-    .social-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
+    /* --- Братки --- */
+    .bros-section {
+      margin-top: 20px;
       background: var(--glass-bg);
       backdrop-filter: blur(10px);
       border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 15px;
+    }
+    .bros-section h3 {
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+      color: #4a9eff;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .bros-section h3::before {
+      content: ">> ";
+    }
+    .bros-list {
+      list-style: none;
+      padding: 0;
+    }
+    .bros-list li {
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      background: rgba(74, 158, 255, 0.1);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .bros-list li:hover {
+      background: rgba(74, 158, 255, 0.2);
+      transform: translateX(5px);
+    }
+    .bros-list a {
       color: var(--main-color);
       text-decoration: none;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-
-    .social-link::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: var(--main-color);
-      transform: scale(0);
-      transition: transform 0.3s ease;
-      z-index: -1;
+    .bros-list a:hover {
+      color: #4a9eff;
     }
-
-    .social-link:hover::before {
-      transform: scale(1);
+    .bros-list i {
+      color: #4a9eff;
     }
-
-    .social-link:hover {
-      color: var(--bg-color);
-      transform: translateY(-3px) scale(1.1);
-      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+    .bros-name {
+      font-weight: 600;
     }
-
-    .social-link i {
-      font-size: 1.3rem;
-      z-index: 1;
+    .bros-handle {
+      color: #888;
+      font-size: 0.85rem;
     }
-
     /* --- Стек технологий --- */
     .stack {
       display: flex;
@@ -319,7 +284,6 @@
       gap: 15px;
       align-items: center;
     }
-
     /* --- Проекты --- */
     .project-card {
       background: var(--glass-bg);
@@ -330,20 +294,17 @@
       margin-bottom: 20px;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-
     .project-card:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 25px rgba(120, 120, 120, 0.2);
       border-color: rgba(120, 120, 120, 0.4);
     }
-
     .project-header {
       display: flex;
       align-items: center;
       gap: 15px;
       margin-bottom: 15px;
     }
-
     .project-logo {
       width: 50px;
       height: 50px;
@@ -351,30 +312,25 @@
       object-fit: cover;
       border: 1px solid var(--glass-border);
     }
-
     .project-title {
       font-size: 1.3rem;
       font-weight: 600;
       color: #4a9eff;
       margin: 0;
     }
-
     .project-subtitle {
       font-size: 0.9rem;
       color: #888;
       margin: 0;
     }
-
     .project-description {
       color: var(--main-color);
       line-height: 1.6;
       margin-bottom: 15px;
     }
-
     .project-features {
       margin-bottom: 15px;
     }
-
     .project-features h4 {
       color: #4a9eff;
       font-size: 0.9rem;
@@ -382,13 +338,11 @@
       text-transform: uppercase;
       letter-spacing: 1px;
     }
-
     .project-features ul {
       list-style: none;
       padding: 0;
       margin: 0;
     }
-
     .project-features li {
       color: var(--main-color);
       font-size: 0.85rem;
@@ -396,20 +350,17 @@
       padding-left: 12px;
       position: relative;
     }
-
     .project-features li::before {
       content: "•";
       color: #4a9eff;
       position: absolute;
       left: 0;
     }
-
     .project-links {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
     }
-
     .project-link {
       display: inline-flex;
       align-items: center;
@@ -423,13 +374,11 @@
       font-size: 0.8rem;
       transition: all 0.3s ease;
     }
-
     .project-link:hover {
       background: var(--main-color);
       color: var(--bg-color);
       transform: translateY(-1px);
     }
-
     .project-status {
       display: inline-block;
       padding: 4px 8px;
@@ -442,7 +391,6 @@
       letter-spacing: 0.5px;
       margin-bottom: 10px;
     }
-
     .stack img {
       height: 32px;
       border-radius: 8px;
@@ -454,46 +402,38 @@
       opacity: 0;
       filter: grayscale(100%) !important;
     }
-
     .stack img.loaded {
       opacity: 1;
     }
-
     /* Специфичные цветные тени для каждого логотипа */
     .stack img[alt="TypeScript"]:hover {
       transform: scale(1.15) translateY(-2px);
       filter: grayscale(0%) !important;
       box-shadow: 0 8px 25px var(--typescript-shadow);
     }
-
     .stack img[alt="Rust"]:hover {
       transform: scale(1.15) translateY(-2px);
       filter: grayscale(0%) !important;
       box-shadow: 0 8px 25px var(--rust-shadow);
     }
-
     .stack img[alt="JavaScript"]:hover {
       transform: scale(1.15) translateY(-2px);
       filter: grayscale(0%) !important;
       box-shadow: 0 8px 25px var(--javascript-shadow);
     }
-
     /* --- Ленивая загрузка --- */
     .lazy-img {
       opacity: 0;
       transition: opacity 0.5s ease-in-out;
     }
-
     .lazy-img.loaded {
       opacity: 1;
     }
-
     .lazy-placeholder {
       background: linear-gradient(90deg, var(--glass-bg) 25%, rgba(255, 255, 255, 0.1) 50%, var(--glass-bg) 75%);
       background-size: 200% 100%;
       animation: shimmer 1.5s infinite;
     }
-
     @keyframes shimmer {
       0% {
         background-position: -200% 0;
@@ -502,11 +442,9 @@
         background-position: 200% 0;
       }
     }
-
     .avatar.lazy-img {
       background: var(--glass-bg);
     }
-
     /* --- Подвал --- */
     footer {
       text-align: center;
@@ -516,29 +454,23 @@
       border-top: 1px solid var(--border-color);
       padding-top: 20px;
     }
-
     /* --- Адаптивность --- */
     @media (max-width: 600px) {
       .container {
         padding: 20px;
       }
-
       .profile-header {
         flex-direction: column;
         text-align: center;
       }
-
       .links {
         grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
-
 <body>
-
   <div class="container">
-
     <header class="profile-header">
       <img data-src="https://raw.githubusercontent.com/derxanax/derxanax.github.io/refs/heads/main/avatar.png"
         alt="Аватар Derx" class="avatar lazy-img lazy-placeholder">
@@ -547,7 +479,6 @@
         <p class="subtitle">Ts/Rs/Go Developer</p>
       </div>
     </header>
-
     <main>
       <section class="section">
         <h2>// Контакты</h2>
@@ -570,19 +501,33 @@
           </a>
         </div>
         
-        <div class="social-links">
-          <a href="https://github.com/denxanax" target="_blank" class="social-link" title="GitHub">
-            <i class="fab fa-github"></i>
-          </a>
-          <a href="https://t.me/Derx88" target="_blank" class="social-link" title="Telegram">
-            <i class="fab fa-telegram"></i>
-          </a>
-          <a href="mailto:derx@tuta.io" class="social-link" title="Email">
-            <i class="fas fa-envelope"></i>
-          </a>
+        <div class="bros-section">
+          <h3>// Братки</h3>
+          <ul class="bros-list">
+            <li>
+              <a href="https://t.me/popa_j0p" target="_blank">
+                <i class="fas fa-user"></i>
+                <span class="bros-name">Братка</span>
+                <span class="bros-handle">@popa_j0p</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://t.me/ChunkByte0" target="_blank">
+                <i class="fas fa-user"></i>
+                <span class="bros-name">Хуйло</span>
+                <span class="bros-handle">@ChunkByte0</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://t.me/PPPOOOLLLMMMAAATTTEEERRRIIII" target="_blank">
+                <i class="fas fa-user"></i>
+                <span class="bros-name">Браток</span>
+                <span class="bros-handle">@PPPOOOLLLMMMAAATTTEEERRRIIII</span>
+              </a>
+            </li>
+          </ul>
         </div>
       </section>
-
       <section class="section">
         <h2>// Проекты</h2>
         
@@ -597,12 +542,10 @@
               <p class="project-subtitle">Telegram Bot для групп • v.Brev9-24.N</p>
             </div>
           </div>
-
           <div class="project-description">
             BrevNine — многофункциональный помощник для Telegram-групп с ИИ-интеграцией, 
             системой модерации и развлекательными функциями. Некоммерческий проект — всегда бесплатно!
           </div>
-
           <div class="project-features">
             <h4>Основные функции</h4>
             <ul>
@@ -615,7 +558,6 @@
               <li>Модерация групп (в разработке)</li>
             </ul>
           </div>
-
           <div class="project-links">
             <a href="https://t.me/brev9bot" target="_blank" class="project-link">
               <i class="fab fa-telegram"></i>
@@ -635,7 +577,6 @@
             </a>
           </div>
         </div>
-
         <div class="project-card">
           <div class="project-status">Temporarily suspended • Open Source</div>
           
@@ -647,12 +588,10 @@
               <p class="project-subtitle">ИИ-терминал & IDE • ZeroEnhanced</p>
             </div>
           </div>
-
           <div class="project-description">
             Революционный ИИ-агент для терминала. Забудьте про запоминание команд — 
             просто говорите с терминалом на естественном языке. Безопасное выполнение в Docker-контейнерах.
           </div>
-
           <div class="project-features">
             <h4>Ключевые возможности</h4>
             <ul>
@@ -665,7 +604,6 @@
               <li>Автоматизированная установка</li>
             </ul>
           </div>
-
           <div class="project-links">
             <a href="https://github.com/derxanax/ZeroEnhanced" target="_blank" class="project-link">
               <i class="fab fa-github"></i>
@@ -682,7 +620,6 @@
           </div>
         </div>
       </section>
-
       <section class="section">
         <h2>// Стек</h2>
         <div class="stack">
@@ -695,13 +632,10 @@
         </div>
       </section>
     </main>
-
     <footer>
       <p>Location: Saint-Petersburg / Miami</p>
     </footer>
-
   </div>
-
   <script>
     // Ленивая загрузка изображений с Intersection Observer API
     class LazyImageLoader {
@@ -709,7 +643,6 @@
         this.imageObserver = null;
         this.init();
       }
-
       init() {
         if ('IntersectionObserver' in window) {
           this.imageObserver = new IntersectionObserver((entries, observer) => {
@@ -724,25 +657,21 @@
             rootMargin: '50px 0px',
             threshold: 0.01
           });
-
           this.observeImages();
         } else {
           // Fallback для старых браузеров
           this.loadAllImages();
         }
       }
-
       observeImages() {
         const lazyImages = document.querySelectorAll('.lazy-img');
         lazyImages.forEach(img => {
           this.imageObserver.observe(img);
         });
       }
-
       loadImage(img) {
         const dataSrc = img.getAttribute('data-src');
         if (!dataSrc) return;
-
         // Создаем новое изображение для предзагрузки
         const imageLoader = new Image();
         
@@ -757,36 +686,30 @@
             img.style.filter = 'grayscale(100%)';
           }
         };
-
         imageLoader.onerror = () => {
           // Обработка ошибки загрузки
           img.classList.remove('lazy-placeholder');
           img.style.background = 'var(--border-color)';
           console.warn('Не удалось загрузить изображение:', dataSrc);
         };
-
         // Начинаем загрузку
         imageLoader.src = dataSrc;
       }
-
       loadAllImages() {
         // Fallback для браузеров без поддержки IntersectionObserver
         const lazyImages = document.querySelectorAll('.lazy-img');
         lazyImages.forEach(img => this.loadImage(img));
       }
     }
-
     // Инициализация после загрузки DOM
     document.addEventListener('DOMContentLoaded', () => {
       new LazyImageLoader();
     });
-
     // Предзагрузка критически важных изображений
     document.addEventListener('DOMContentLoaded', () => {
       const criticalImages = [
         'https://raw.githubusercontent.com/derxanax/derxanax.github.io/refs/heads/main/avatar.png'
       ];
-
       criticalImages.forEach(src => {
         const link = document.createElement('link');
         link.rel = 'preload';
@@ -796,7 +719,5 @@
       });
     });
   </script>
-
 </body>
-
 </html>
